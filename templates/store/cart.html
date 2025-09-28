@@ -42,13 +42,14 @@
                   <div class="col">
                     <div class="input-group input-spinner">
                       <div class="input-group-prepend">
-                        <button
+                        <a
+                          href="{% url 'remove_cart' cart_item.product.id %}"
                           class="btn btn-light"
                           type="button"
                           id="button-plus"
                         >
                           <i class="fa fa-minus"></i>
-                        </button>
+                        </a>
                       </div>
                       <input
                         type="text"
@@ -80,7 +81,12 @@
                   <!-- price-wrap .// -->
                 </td>
                 <td class="text-right">
-                  <a href="" class="btn btn-danger"> Remove</a>
+                  <a
+                    href="{% url 'remove_cart_item' cart_item.product.id %}"
+                    class="btn btn-danger"
+                  >
+                    Remove</a
+                  >
                 </td>
               </tr>
               {% endfor %}
