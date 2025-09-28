@@ -72,10 +72,17 @@
             </div>
             <!-- row.// -->
             <hr />
+            {% if single_product.stock > 0 %}
             <a href="./product-detail.html" class="btn btn-primary">
               <span class="text">Add to cart</span>
               <i class="fas fa-shopping-cart"></i>
             </a>
+            {% else %}
+            <a href="" class="btn btn-secondary disabled">
+              <span class="text">Out of Stock</span>
+              <i class="fas fa-shopping-cart"></i>
+            </a>
+            {% endif %}
           </article>
           <!-- product-info-aside .// -->
         </main>
