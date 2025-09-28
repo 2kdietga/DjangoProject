@@ -2,7 +2,7 @@ from django.db import models
 from store.models import Product
 
 class Cart(models.Model):
-    card_id = models.CharField(max_length=100, blank=True)
+    cart_id = models.CharField(max_length=100, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
