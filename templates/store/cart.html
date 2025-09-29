@@ -2,7 +2,14 @@
 <section class="section-content padding-y bg">
   <div class="container">
     <!-- ============================ COMPONENT 1 ================================= -->
-
+    {%if not cart_items%}
+    <div class="card">
+      <div class="card-body" align="center">
+        <h4>Your cart is empty</h4>
+        <a href="{% url 'store' %}" class="btn btn-primary">Shop Now</a>
+      </div>
+    </div>
+    {% else %}
     <div class="row">
       <aside class="col-lg-9">
         <div class="card">
@@ -27,7 +34,9 @@
                       />
                     </div>
                     <figcaption class="info">
-                      <a href="#" class="title text-dark"
+                      <a
+                        href="{{cart_item.product.get_url}}"
+                        class="title text-dark"
                         >{{cart_item.product.product_name}}</a
                       >
                       <p class="text-muted small">
@@ -120,7 +129,7 @@
             <a href="./place-order.html" class="btn btn-primary btn-block">
               Checkout
             </a>
-            <a href="./store.html" class="btn btn-light btn-block"
+            <a href="{% url 'store' %}" class="btn btn-light btn-block"
               >Continue Shopping</a
             >
           </div>
@@ -130,6 +139,7 @@
       </aside>
       <!-- col.// -->
     </div>
+    {% endif %}
     <!-- row.// -->
     <!-- ============================ COMPONENT 1 END .// ================================= -->
   </div>
