@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from store.models import Product , Variation
 from .models import Cart, CartItem
-from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 
 def _cart_id(request):
@@ -28,16 +27,33 @@ def add_cart(request, product_id):
     except Cart.DoesNotExist:
         cart = Cart.objects.create(cart_id=_cart_id(request))
     cart.save()
-    
-    try:
-        cart_item = CartItem.objects.get(product=product, cart=cart)
-        if len(product_variation) > 0:
-            cart_item.variations.clear() #xóa hết các thuộc tính variation hiện có của cart_item
-            for item in product_variation:
-                cart_item.variations.add(item) #thêm thuộc tính variation vào cart_item
-        cart_item.quantity += 1
-        cart_item.save()
-    except CartItem.DoesNotExist:
+
+    is_cart_item_exists = CartItem.objects.filter(product=product, cart=cart).exists()
+    if is_cart_item_exists:
+        cart_item = CartItem.objects.filter(product=product, cart=cart)
+        # existing_variation_list-> db
+        # current_variation-> product_variation
+        # item_id-> db
+        ex_var_list = [] #existing_variation_list
+        id = [] #item_id_list
+        for item in cart_item:
+            existing_variation = item.variations.all() #lấy tất cả các thuộc tính variation của cart_item hiện có trong db
+            ex_var_list.append(list(existing_variation)) #ex_var_list = [[color, size], [color, size]]
+            id.append(item.id)
+            
+        if product_variation in ex_var_list: #nếu thuộc tính variation hiện tại đã có trong db
+            index=ex_var_list.index(product_variation)
+            item_id = id[index]
+            item = CartItem.objects.get(product=product, id=item_id)
+            item.quantity += 1
+            item.save()
+        else:
+            item = CartItem.objects.create(product=product,quantity=1,cart=cart)
+            if len(product_variation) > 0:
+                item.variations.clear() #xóa hết các thuộc tính variation hiện có của cart_item
+                item.variations.add(*product_variation)
+            item.save()
+    else:
         cart_item = CartItem.objects.create(
             product=product,
             quantity=1,
@@ -45,8 +61,7 @@ def add_cart(request, product_id):
         )
         if len(product_variation) > 0:
             cart_item.variations.clear() #xóa hết các thuộc tính variation hiện có của cart_item
-            for item in product_variation:
-                cart_item.variations.add(item)
+            cart_item.variations.add(*product_variation)
         cart_item.save()
     return redirect('cart')
 
