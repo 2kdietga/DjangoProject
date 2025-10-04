@@ -1,0 +1,6 @@
+# Bỏ qua 1 file     src/legacy-code.js
+
+# Bỏ qua cả folder  dist/
+
+
+templates/accounts/account_verification_email.html
